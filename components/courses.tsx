@@ -37,8 +37,15 @@ const courses = [
     help: "Check that your particular institution and programme accept the test. Admission acceptance does not automatically establish visa suitability.",
   },
 ];
-export function Courses() {
-  const [selected, setSelected] = useState(0);
+export function Courses({ initialTest }: { initialTest?: string }) {
+  const [selected, setSelected] = useState(() =>
+    Math.max(
+      0,
+      courses.findIndex(
+        (course) => course.name.toLowerCase() === initialTest?.toLowerCase(),
+      ),
+    ),
+  );
   const c = courses[selected];
   return (
     <>
@@ -53,6 +60,7 @@ export function Courses() {
             role="tab"
             id={"tab-" + i}
             aria-selected={selected === i}
+            tabIndex={selected === i ? 0 : -1}
             aria-controls="course-panel"
             onClick={() => setSelected(i)}
             onKeyDown={(e) => {

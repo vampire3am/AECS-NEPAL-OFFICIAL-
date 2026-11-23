@@ -1,7 +1,12 @@
 import { Courses } from "@/components/courses";
 import { Invitation, PageIntro } from "@/components/shared";
 export const metadata = { title: "IELTS, PTE & Duolingo preparation" };
-export default function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ test?: string }>;
+}) {
+  const { test } = await searchParams;
   return (
     <>
       <PageIntro title="Preparation that builds confidence.">
@@ -11,7 +16,7 @@ export default function Page() {
         </p>
       </PageIntro>
       <section className="shell content-section">
-        <Courses />
+        <Courses initialTest={test} />
         <div className="faq">
           <h2>A few things to know.</h2>
           <details>

@@ -14,7 +14,12 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const path = usePathname();
   return (
-    <header className="site-header">
+    <header
+      className="site-header"
+      onKeyDown={(e) => {
+        if (e.key === "Escape") setOpen(false);
+      }}
+    >
       <div className="shell header-inner">
         <Link
           href="/"
