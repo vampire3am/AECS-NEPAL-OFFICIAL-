@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 const links = [
-  ["Destinations", "/destinations"],
-  ["English preparation", "/courses"],
-  ["Pricing", "/pricing"],
-  ["About AECS", "/about"],
-  ["नेपाली", "/nepali"],
+  ["Study abroad", "/destinations"],
+  ["English tests", "/courses"],
+  ["Fees", "/pricing"],
+  ["Resources", "/guides"],
+  ["Study planner", "/plan"],
 ];
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -58,7 +58,7 @@ export function Header() {
             My AECS
           </Link>
           <Link href="/book" className="button button-small">
-            Let’s talk
+            Book a free session
           </Link>
           <button
             className="menu-button"
@@ -82,7 +82,8 @@ export function Header() {
         >
           {[
             ...links,
-            ["My study plan", "/plan"],
+            ["About AECS", "/about"],
+            ["नेपाली", "/nepali"],
             ["Guides", "/guides"],
             ["Contact & booking", "/book"],
           ].map(([name, url]) => (

@@ -23,3 +23,9 @@ Confirm actual email-code delivery to the owner inbox and a student inbox, staff
 ## Final local build checks
 
 Next.js production build and TypeScript passed. All 28 public page routes returned HTTP 200, anonymous private endpoints returned 401/403, unknown routes and the removed development QA route returned 404, and the student portal redirected anonymous visitors to sign-in. Static and optimised hero/logo image requests returned 200. No real email was sent.
+
+## Entire frontend redesign — 24 November 2026
+
+Installed Impeccable in this repository using pnpm dlx impeccable install --project --providers=codex --yes (npx was unavailable). Loaded project context and design guidance, used source and rendered detection, and captured desktop/mobile screenshots. Replaced the homepage composition, added a working planning starter and portal walkthrough, rebuilt the destination directory, introduced package filters, restyled shared public pages and forms, and converted the workspace navigation to a responsive sidebar. Browser tests verified draft handoff. Real email delivery was not exercised.
+
+Rendered Impeccable detection returned zero findings on the homepage, destination directory, pricing and sign-in after correcting small labels and footer contrast. This is an automated check, not a full accessibility certification. Browser review also verified real development student dossiers with the new sidebar and the Mock tests package filter.

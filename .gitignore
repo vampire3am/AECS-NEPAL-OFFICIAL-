@@ -8,3 +8,5 @@ node_modules/
 .impeccable/review/
 
 .test-local/
+# Installed development tooling; reinstall with the command in README.md.
+.agents/skills/impeccable/

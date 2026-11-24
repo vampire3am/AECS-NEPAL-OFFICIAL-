@@ -2,11 +2,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
+import { Search, ArrowUpRight, ArrowRight } from "lucide-react";
 import { destinationFacts, factsReviewed } from "@/lib/destination-facts";
 import { destinations } from "@/lib/content";
 export function DestinationExplorer() {
-  const [region, setRegion] = useState("All destinations"),
+  const [active, setActive] = useState("australia"),
+    [region, setRegion] = useState("All destinations"),
     [query, setQuery] = useState(""),
     [selected, setSelected] = useState<string[]>([]),
     [show, setShow] = useState(false),
@@ -53,6 +54,9 @@ export function DestinationExplorer() {
       d.name.toLowerCase().includes(query.toLowerCase()),
   );
   const compare = destinations.filter((d) => selected.includes(d.slug));
+  const visibleActive = filtered.some((d) => d.slug === active)
+    ? active
+    : filtered[0]?.slug;
   return (
     <>
       <div className="filter-bar">
@@ -87,46 +91,111 @@ export function DestinationExplorer() {
       <p role="status" className="form-status error">
         {message}
       </p>
-      <div className="destination-grid">
-        {filtered.map((d) => (
-          <article key={d.slug} className="destination-card">
-            <Link
-              href={"/destinations/" + d.slug}
-              className="image-wrap"
-              style={{ display: "block" }}
+      <div className="destination-directory">
+        <div
+          className="country-directory-list"
+          aria-label="Choose a destination"
+        >
+          {filtered.map((d) => (
+            <div
+              className={
+                "country-directory-row " +
+                (visibleActive === d.slug ? "is-active" : "")
+              }
+              key={d.slug}
             >
-              <Image
-                src={d.image}
-                alt={`${d.name} destination view`}
-                fill
-                sizes="(max-width:600px) 90vw, (max-width:900px) 45vw, 30vw"
-              />
-            </Link>
-            <h2>
-              <Link href={"/destinations/" + d.slug}>{d.name}</Link>
-            </h2>
-            <p>{d.intro}</p>
-            <div>
-              <Link className="text-link" href={"/destinations/" + d.slug}>
-                Explore the route
-              </Link>
-              <label className="compare-toggle">
+              <button
+                aria-pressed={visibleActive === d.slug}
+                onClick={() => {
+                  setActive(d.slug);
+                  if (window.matchMedia("(max-width:760px)").matches)
+                    setTimeout(
+                      () =>
+                        document
+                          .getElementById("route-preview")
+                          ?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          }),
+                      50,
+                    );
+                }}
+              >
+                <span>{d.region}</span>
+                <strong>{d.name}</strong>
+                <ArrowUpRight size={20} />
+              </button>
+              <label className="directory-compare">
                 <input
                   type="checkbox"
                   checked={selected.includes(d.slug)}
                   onChange={() => toggle(d.slug)}
+                  aria-label={"Compare " + d.name}
                 />
-                Compare
+                <span>Compare</span>
               </label>
             </div>
-          </article>
-        ))}
-        {!filtered.length && (
-          <div className="empty-state">
-            <h2>No destinations found.</h2>
-            <p>Try another name or select all destinations.</p>
-          </div>
-        )}
+          ))}
+          {!filtered.length && (
+            <div className="empty-state">
+              <h2>No destinations found.</h2>
+              <p>Try another name or select all destinations.</p>
+            </div>
+          )}
+        </div>
+        {filtered.length > 0 &&
+          (() => {
+            const d = filtered.find((d) => d.slug === active) || filtered[0];
+            return (
+              <aside
+                className="route-preview"
+                id="route-preview"
+                aria-label={d.name + " study overview"}
+              >
+                <div className="route-preview-image">
+                  <Image
+                    src={d.image}
+                    alt={d.name + " destination view"}
+                    fill
+                    sizes="(max-width:760px) 90vw, 50vw"
+                  />
+                  <h2>{d.name}</h2>
+                </div>
+                <div className="route-preview-body">
+                  <p>{d.intro}</p>
+                  <dl>
+                    <div>
+                      <dt>Planning focus</dt>
+                      <dd>{d.focus}</dd>
+                    </div>
+                    <div>
+                      <dt>Language</dt>
+                      <dd>{d.language}</dd>
+                    </div>
+                  </dl>
+                  <div className="route-preview-cost">
+                    <strong>Budget starting point</strong>
+                    <p>{destinationFacts[d.slug].living}</p>
+                    <span>Checked {factsReviewed} · Original currency</span>
+                  </div>
+                  <div className="route-preview-actions">
+                    <Link href={"/destinations/" + d.slug} className="button">
+                      Explore the route <ArrowUpRight size={18} />
+                    </Link>
+                    <button
+                      className="text-link"
+                      onClick={() => toggle(d.slug)}
+                    >
+                      {selected.includes(d.slug)
+                        ? "Remove from comparison"
+                        : "Add to comparison"}
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              </aside>
+            );
+          })()}
       </div>
       {selected.length > 0 && (
         <div className="compare-tray">

@@ -19,6 +19,10 @@ import {
   FileText,
   CalendarDays,
   MessageSquare,
+  LayoutDashboard,
+  UserRound,
+  FolderLock,
+  Globe2,
 } from "lucide-react";
 import { destinations } from "@/lib/content";
 import { stages, owners } from "@/lib/workspace-options";
@@ -381,633 +385,667 @@ export function Workspace({ staff = false }: { staff?: boolean }) {
             <span>{data.user.email}</span>
             {staff && data.user.phone && <span>{data.user.phone}</span>}
           </div>
-          <nav className="workspace-tabs" aria-label="Workspace sections">
-            {[
-              "Overview",
-              "Study plan",
-              "Applications",
-              "Documents",
-              "Appointments",
-              "Messages",
-              "Profile",
-            ].map((t) => (
-              <button
-                key={t}
-                aria-current={t === tab ? "page" : undefined}
-                onClick={() => {
-                  setTab(t);
-                  setNotice("");
-                }}
-              >
-                {t}
-              </button>
-            ))}
-          </nav>
-          <div className="workspace-content" aria-busy={busy}>
-            {tab === "Overview" && (
-              <>
-                <section className="workspace-welcome">
-                  <div>
-                    <h2>
-                      {tasks.some((t) => !t.completed && t.owner === "Student")
-                        ? "A few things to move forward."
-                        : apps.length
-                          ? "Your next steps, together."
-                          : "Let’s start with your study plan."}
-                    </h2>
-                    <p>
-                      {apps.length
-                        ? "Updates here are entered by AECS. A stage records the team’s progress; official decisions come from the institution or relevant authority."
-                        : "Tell us what you want to study and what matters to you. AECS can then work with you on a shortlist and the documents you need."}
-                    </p>
-                    <button
-                      className="text-link"
-                      onClick={() =>
-                        setTab(apps.length ? "Applications" : "Study plan")
-                      }
-                    >
-                      {apps.length ? "View applications" : "Open my study plan"}
-                      <ArrowRight size={17} />
-                    </button>
-                  </div>
-                  <div className="workspace-summary">
-                    <span>
-                      <FileText size={19} />
-                      {apps.length}{" "}
-                      {apps.length === 1 ? "application" : "applications"}
-                    </span>
-                    <span>
-                      <CheckCircle2 size={19} />
-                      {tasks.filter((t) => !t.completed).length} open tasks
-                    </span>
-                    <span>
-                      <CalendarDays size={19} />
-                      {
-                        meetings.filter((m) =>
-                          ["Requested", "Confirmed"].includes(m.status),
-                        ).length
-                      }{" "}
-                      upcoming / requested
-                    </span>
-                  </div>
-                </section>
-                <section className="workspace-section">
-                  <h2>Next actions</h2>
-                  {tasks.length ? (
-                    <ul className="task-list">
-                      {tasks.map((t) => (
-                        <li key={t.id}>
-                          <label>
-                            <input
-                              type="checkbox"
-                              checked={t.completed}
-                              disabled={
-                                busy || (!staff && t.owner !== "Student")
-                              }
-                              onChange={(e) =>
-                                void mutate({
-                                  action: "task-toggle",
-                                  id: t.id,
-                                  completed: e.target.checked,
-                                })
-                              }
-                            />
-                            <span className={t.completed ? "task-done" : ""}>
-                              {t.title}
-                              <small>
-                                {t.owner}
-                                {t.due_date
-                                  ? " · Due " + day(t.due_date)
-                                  : " · No deadline set"}
-                              </small>
-                            </span>
-                          </label>
-                        </li>
-                      ))}
-                    </ul>
+          <div className="workspace-layout">
+            <nav className="workspace-tabs" aria-label="Workspace sections">
+              {[
+                "Overview",
+                "Study plan",
+                "Applications",
+                "Documents",
+                "Appointments",
+                "Messages",
+                "Profile",
+              ].map((t) => (
+                <button
+                  key={t}
+                  aria-current={t === tab ? "page" : undefined}
+                  onClick={() => {
+                    setTab(t);
+                    setNotice("");
+                  }}
+                >
+                  {t === "Overview" ? (
+                    <LayoutDashboard size={18} />
+                  ) : t === "Study plan" ? (
+                    <FileText size={18} />
+                  ) : t === "Applications" ? (
+                    <Globe2 size={18} />
+                  ) : t === "Documents" ? (
+                    <FolderLock size={18} />
+                  ) : t === "Appointments" ? (
+                    <CalendarDays size={18} />
+                  ) : t === "Messages" ? (
+                    <MessageSquare size={18} />
                   ) : (
-                    <Empty>
-                      No tasks have been assigned yet. Send AECS a message to
-                      agree your next steps.
-                    </Empty>
-                  )}
-                  {staff && (
-                    <details className="workspace-editor">
-                      <summary>Add a task or document checklist item</summary>
-                      <form
-                        onSubmit={(e) => void submit(e, "task")}
-                        className="workspace-form"
-                      >
-                        <Field label="Task">
-                          <input name="title" required maxLength={300} />
-                        </Field>
-                        <div className="form-row">
-                          <Field label="Waiting on">
-                            <select name="owner">
-                              {owners.map((o) => (
-                                <option key={o}>{o}</option>
-                              ))}
-                            </select>
-                          </Field>
-                          <Field label="Due date (optional)">
-                            <input name="dueDate" type="date" />
-                          </Field>
-                        </div>
-                        <button className="button button-small" disabled={busy}>
-                          Add task
-                        </button>
-                      </form>
-                    </details>
-                  )}
-                </section>
-                <div className="workspace-shortcuts">
-                  <button onClick={() => setTab("Documents")}>
-                    <FileText />
-                    <span>
-                      Private documents
-                      <small>Upload and check review feedback</small>
-                    </span>
-                    <ArrowRight />
-                  </button>
-                  <button onClick={() => setTab("Messages")}>
-                    <MessageSquare />
-                    <span>
-                      Talk to AECS
-                      <small>Keep your questions in one place</small>
-                    </span>
-                    <ArrowRight />
-                  </button>
-                </div>
-              </>
-            )}
-            {tab === "Study plan" && (
-              <PlanEditor
-                key={selected + String(data.plan?.destination)}
-                plan={data.plan}
-                busy={busy}
-                save={mutate}
-              />
-            )}
-            {tab === "Applications" && (
-              <section className="workspace-section">
-                <h2>Your applications</h2>
-                <p className="section-note">
-                  AECS adds an application after agreeing the institution,
-                  course and intake with you.
-                </p>
-                {!apps.length && (
-                  <Empty>
-                    No applications have been added yet. Save your study plan
-                    and message AECS to start your shortlist.
-                  </Empty>
-                )}
-                {apps.map((a) => (
-                  <article className="application-record" key={a.id}>
-                    <div className="record-heading">
-                      <div>
-                        <h3>{a.institution}</h3>
-                        <p>{a.course}</p>
-                      </div>
-                      <span className="status-label">{a.stage}</span>
-                    </div>
-                    <p>
-                      {a.destination} · {a.intake}
-                    </p>
-                    <div className="application-next">
-                      <strong>Next action · Waiting on {a.waiting_on}</strong>
+                    <UserRound size={18} />
+                  )}{" "}
+                  {t}
+                </button>
+              ))}
+            </nav>
+            <div className="workspace-content" aria-busy={busy}>
+              {tab === "Overview" && (
+                <>
+                  <section className="workspace-welcome">
+                    <div>
+                      <h2>
+                        {tasks.some(
+                          (t) => !t.completed && t.owner === "Student",
+                        )
+                          ? "A few things to move forward."
+                          : apps.length
+                            ? "Your next steps, together."
+                            : "Let’s start with your study plan."}
+                      </h2>
                       <p>
-                        {a.next_action ||
-                          "AECS has not set the next action yet."}
+                        {apps.length
+                          ? "Updates here are entered by AECS. A stage records the team’s progress; official decisions come from the institution or relevant authority."
+                          : "Tell us what you want to study and what matters to you. AECS can then work with you on a shortlist and the documents you need."}
                       </p>
+                      <button
+                        className="text-link"
+                        onClick={() =>
+                          setTab(apps.length ? "Applications" : "Study plan")
+                        }
+                      >
+                        {apps.length
+                          ? "View applications"
+                          : "Open my study plan"}
+                        <ArrowRight size={17} />
+                      </button>
                     </div>
-                    <small>Updated {date(a.updated_at)} NPT</small>
-                    {data.events?.some((e) => e.application_id === a.id) && (
-                      <details className="application-history">
-                        <summary>Application history</summary>
-                        <ol>
-                          {data.events
-                            .filter((e) => e.application_id === a.id)
-                            .map((e) => (
-                              <li key={e.id}>
-                                <strong>{e.stage}</strong>
+                    <div className="workspace-summary">
+                      <span>
+                        <FileText size={19} />
+                        {apps.length}{" "}
+                        {apps.length === 1 ? "application" : "applications"}
+                      </span>
+                      <span>
+                        <CheckCircle2 size={19} />
+                        {tasks.filter((t) => !t.completed).length} open tasks
+                      </span>
+                      <span>
+                        <CalendarDays size={19} />
+                        {
+                          meetings.filter((m) =>
+                            ["Requested", "Confirmed"].includes(m.status),
+                          ).length
+                        }{" "}
+                        upcoming / requested
+                      </span>
+                    </div>
+                  </section>
+                  <section className="workspace-section">
+                    <h2>Next actions</h2>
+                    {tasks.length ? (
+                      <ul className="task-list">
+                        {tasks.map((t) => (
+                          <li key={t.id}>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={t.completed}
+                                disabled={
+                                  busy || (!staff && t.owner !== "Student")
+                                }
+                                onChange={(e) =>
+                                  void mutate({
+                                    action: "task-toggle",
+                                    id: t.id,
+                                    completed: e.target.checked,
+                                  })
+                                }
+                              />
+                              <span className={t.completed ? "task-done" : ""}>
+                                {t.title}
                                 <small>
-                                  {date(e.created_at)} NPT · Waiting on{" "}
-                                  {e.waiting_on}
+                                  {t.owner}
+                                  {t.due_date
+                                    ? " · Due " + day(t.due_date)
+                                    : " · No deadline set"}
                                 </small>
-                                {e.next_action && <p>{e.next_action}</p>}
-                              </li>
-                            ))}
-                        </ol>
-                      </details>
+                              </span>
+                            </label>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <Empty>
+                        No tasks have been assigned yet. Send AECS a message to
+                        agree your next steps.
+                      </Empty>
                     )}
                     {staff && (
                       <details className="workspace-editor">
-                        <summary>Update application</summary>
+                        <summary>Add a task or document checklist item</summary>
                         <form
+                          onSubmit={(e) => void submit(e, "task")}
                           className="workspace-form"
-                          onSubmit={(e) =>
-                            void submit(e, "application-update", { id: a.id })
-                          }
                         >
+                          <Field label="Task">
+                            <input name="title" required maxLength={300} />
+                          </Field>
                           <div className="form-row">
-                            <Field label="Stage">
-                              <select name="stage" defaultValue={a.stage}>
-                                {stages.map((s) => (
-                                  <option key={s}>{s}</option>
-                                ))}
-                              </select>
-                            </Field>
                             <Field label="Waiting on">
-                              <select
-                                name="waitingOn"
-                                defaultValue={a.waiting_on}
-                              >
+                              <select name="owner">
                                 {owners.map((o) => (
                                   <option key={o}>{o}</option>
                                 ))}
                               </select>
                             </Field>
+                            <Field label="Due date (optional)">
+                              <input name="dueDate" type="date" />
+                            </Field>
                           </div>
-                          <Field label="Next action">
+                          <button
+                            className="button button-small"
+                            disabled={busy}
+                          >
+                            Add task
+                          </button>
+                        </form>
+                      </details>
+                    )}
+                  </section>
+                  <div className="workspace-shortcuts">
+                    <button onClick={() => setTab("Documents")}>
+                      <FileText />
+                      <span>
+                        Private documents
+                        <small>Upload and check review feedback</small>
+                      </span>
+                      <ArrowRight />
+                    </button>
+                    <button onClick={() => setTab("Messages")}>
+                      <MessageSquare />
+                      <span>
+                        Talk to AECS
+                        <small>Keep your questions in one place</small>
+                      </span>
+                      <ArrowRight />
+                    </button>
+                  </div>
+                </>
+              )}
+              {tab === "Study plan" && (
+                <PlanEditor
+                  key={selected + String(data.plan?.destination)}
+                  plan={data.plan}
+                  busy={busy}
+                  save={mutate}
+                />
+              )}
+              {tab === "Applications" && (
+                <section className="workspace-section">
+                  <h2>Your applications</h2>
+                  <p className="section-note">
+                    AECS adds an application after agreeing the institution,
+                    course and intake with you.
+                  </p>
+                  {!apps.length && (
+                    <Empty>
+                      No applications have been added yet. Save your study plan
+                      and message AECS to start your shortlist.
+                    </Empty>
+                  )}
+                  {apps.map((a) => (
+                    <article className="application-record" key={a.id}>
+                      <div className="record-heading">
+                        <div>
+                          <h3>{a.institution}</h3>
+                          <p>{a.course}</p>
+                        </div>
+                        <span className="status-label">{a.stage}</span>
+                      </div>
+                      <p>
+                        {a.destination} · {a.intake}
+                      </p>
+                      <div className="application-next">
+                        <strong>Next action · Waiting on {a.waiting_on}</strong>
+                        <p>
+                          {a.next_action ||
+                            "AECS has not set the next action yet."}
+                        </p>
+                      </div>
+                      <small>Updated {date(a.updated_at)} NPT</small>
+                      {data.events?.some((e) => e.application_id === a.id) && (
+                        <details className="application-history">
+                          <summary>Application history</summary>
+                          <ol>
+                            {data.events
+                              .filter((e) => e.application_id === a.id)
+                              .map((e) => (
+                                <li key={e.id}>
+                                  <strong>{e.stage}</strong>
+                                  <small>
+                                    {date(e.created_at)} NPT · Waiting on{" "}
+                                    {e.waiting_on}
+                                  </small>
+                                  {e.next_action && <p>{e.next_action}</p>}
+                                </li>
+                              ))}
+                          </ol>
+                        </details>
+                      )}
+                      {staff && (
+                        <details className="workspace-editor">
+                          <summary>Update application</summary>
+                          <form
+                            className="workspace-form"
+                            onSubmit={(e) =>
+                              void submit(e, "application-update", { id: a.id })
+                            }
+                          >
+                            <div className="form-row">
+                              <Field label="Stage">
+                                <select name="stage" defaultValue={a.stage}>
+                                  {stages.map((s) => (
+                                    <option key={s}>{s}</option>
+                                  ))}
+                                </select>
+                              </Field>
+                              <Field label="Waiting on">
+                                <select
+                                  name="waitingOn"
+                                  defaultValue={a.waiting_on}
+                                >
+                                  {owners.map((o) => (
+                                    <option key={o}>{o}</option>
+                                  ))}
+                                </select>
+                              </Field>
+                            </div>
+                            <Field label="Next action">
+                              <textarea
+                                name="nextAction"
+                                defaultValue={a.next_action}
+                                maxLength={1000}
+                              />
+                            </Field>
+                            <button
+                              className="button button-small"
+                              disabled={busy}
+                            >
+                              Save update
+                            </button>
+                          </form>
+                        </details>
+                      )}
+                    </article>
+                  ))}
+                  {staff && (
+                    <details className="workspace-editor">
+                      <summary>Add an agreed application</summary>
+                      <form
+                        className="workspace-form"
+                        onSubmit={(e) => void submit(e, "application")}
+                      >
+                        {[
+                          ["institution", "Institution"],
+                          ["course", "Course"],
+                          ["destination", "Destination"],
+                          ["intake", "Intake"],
+                        ].map(([name, label]) => (
+                          <Field key={name} label={label}>
+                            <input
+                              name={name}
+                              required
+                              maxLength={
+                                name === "institution" || name === "course"
+                                  ? 200
+                                  : 100
+                              }
+                            />
+                          </Field>
+                        ))}
+                        <button className="button button-small" disabled={busy}>
+                          Add application
+                        </button>
+                      </form>
+                    </details>
+                  )}
+                </section>
+              )}
+              {tab === "Documents" && (
+                <section className="workspace-section">
+                  <h2>Your documents, kept private.</h2>
+                  <p className="section-note">
+                    Only your account and authorised AECS staff can download
+                    these files. Upload documents requested by AECS. Do not
+                    upload passwords, payment card details or unrelated records.
+                  </p>
+                  {!staff && (
+                    <form
+                      className="document-upload"
+                      onSubmit={(e) => void upload(e)}
+                    >
+                      <Field label="Choose a document">
+                        <input
+                          name="file"
+                          type="file"
+                          accept="application/pdf,image/jpeg,image/png"
+                          required
+                        />
+                      </Field>
+                      <p>
+                        PDF, JPG or PNG · Up to 3 MB each · 30 documents per
+                        workspace
+                      </p>
+                      <button className="button button-small" disabled={busy}>
+                        Upload privately
+                      </button>
+                    </form>
+                  )}
+                  {!docs.length && (
+                    <Empty>
+                      No documents uploaded yet. Your checklist appears under
+                      Overview when AECS adds it.
+                    </Empty>
+                  )}
+                  {docs.map((d) => (
+                    <article className="document-record" key={d.id}>
+                      <div className="record-heading">
+                        <div>
+                          <h3>{d.name}</h3>
+                          <small>
+                            {Math.ceil(d.size_bytes / 1024)} KB ·{" "}
+                            {date(d.created_at)} NPT
+                          </small>
+                        </div>
+                        <a
+                          className="text-link"
+                          href={"/api/workspace/documents/" + d.id}
+                        >
+                          <Download size={17} />
+                          Download
+                        </a>
+                      </div>
+                      <p>
+                        <span className="status-label">{d.status}</span>
+                      </p>
+                      {d.feedback && (
+                        <p className="staff-feedback">
+                          AECS feedback: {d.feedback}
+                        </p>
+                      )}
+                      {staff && (
+                        <form
+                          className="workspace-form"
+                          onSubmit={(e) =>
+                            void submit(e, "document-review", { id: d.id })
+                          }
+                        >
+                          <Field label="Review status">
+                            <select
+                              name="status"
+                              defaultValue={
+                                d.status === "Changes requested"
+                                  ? "Changes requested"
+                                  : "Reviewed"
+                              }
+                            >
+                              <option>Reviewed</option>
+                              <option>Changes requested</option>
+                            </select>
+                          </Field>
+                          <Field label="Feedback for student">
                             <textarea
-                              name="nextAction"
-                              defaultValue={a.next_action}
+                              name="feedback"
+                              defaultValue={d.feedback}
                               maxLength={1000}
+                            />
+                          </Field>
+                          <button
+                            className="button button-outline button-small"
+                            disabled={busy}
+                          >
+                            Save review
+                          </button>
+                        </form>
+                      )}
+                    </article>
+                  ))}
+                  <p className="section-note">
+                    “Reviewed” means an AECS staff review. It does not certify
+                    authenticity or institution acceptance. Files are not
+                    automatically virus-scanned.
+                  </p>
+                </section>
+              )}
+              {tab === "Appointments" && (
+                <section className="workspace-section">
+                  <h2>Make time for your next step.</h2>
+                  <p className="section-note">
+                    Requests need AECS confirmation. Confirmed times are shown
+                    in Nepal time (NPT).
+                  </p>
+                  {!staff && (
+                    <form
+                      className="workspace-form"
+                      onSubmit={(e) => void submit(e, "appointment")}
+                    >
+                      <div className="form-row">
+                        <Field label="Preferred date">
+                          <input
+                            name="date"
+                            type="date"
+                            required
+                            min={new Date().toLocaleDateString("en-CA", {
+                              timeZone: "Asia/Kathmandu",
+                            })}
+                          />
+                        </Field>
+                        <Field label="How would you like to meet?">
+                          <select name="mode">
+                            <option>In person</option>
+                            <option>Online</option>
+                            <option>Phone</option>
+                          </select>
+                        </Field>
+                      </div>
+                      <Field label="What would you like to discuss? (optional)">
+                        <textarea name="note" maxLength={500} />
+                      </Field>
+                      <button className="button button-small" disabled={busy}>
+                        Request appointment
+                      </button>
+                    </form>
+                  )}
+                  {!meetings.length && (
+                    <Empty>No appointment requests yet.</Empty>
+                  )}
+                  {meetings.map((m) => (
+                    <article className="appointment-record" key={m.id}>
+                      <div className="record-heading">
+                        <h3>
+                          {day(m.requested_date)} · {m.meeting_mode}
+                        </h3>
+                        <span className="status-label">{m.status}</span>
+                      </div>
+                      {m.note && <p>{m.note}</p>}
+                      {m.starts_at && (
+                        <p>
+                          <strong>{date(m.starts_at)} NPT</strong>
+                        </p>
+                      )}
+                      {m.staff_note && <p>AECS: {m.staff_note}</p>}
+                      {staff && (
+                        <form
+                          className="workspace-form"
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            const f = new FormData(e.currentTarget);
+                            void mutate({
+                              action: "appointment-update",
+                              id: m.id,
+                              status: f.get("status"),
+                              startsAt: f.get("startsAt")
+                                ? new Date(
+                                    String(f.get("startsAt")) + "+05:45",
+                                  ).toISOString()
+                                : "",
+                              note: f.get("note"),
+                            });
+                          }}
+                        >
+                          <div className="form-row">
+                            <Field label="Status">
+                              <select
+                                name="status"
+                                defaultValue={
+                                  m.status === "Requested"
+                                    ? "Confirmed"
+                                    : m.status
+                                }
+                              >
+                                {[
+                                  "Confirmed",
+                                  "Reschedule requested",
+                                  "Cancelled",
+                                  "Completed",
+                                ].map((s) => (
+                                  <option key={s}>{s}</option>
+                                ))}
+                              </select>
+                            </Field>
+                            <Field label="Meeting time (Nepal)">
+                              <input
+                                name="startsAt"
+                                type="datetime-local"
+                                defaultValue={
+                                  m.starts_at
+                                    ? new Date(
+                                        new Date(m.starts_at).getTime() +
+                                          20700000,
+                                      )
+                                        .toISOString()
+                                        .slice(0, 16)
+                                    : ""
+                                }
+                              />
+                            </Field>
+                          </div>
+                          <Field label="Confirmation or rescheduling details">
+                            <textarea
+                              name="note"
+                              maxLength={1000}
+                              defaultValue={m.staff_note}
                             />
                           </Field>
                           <button
                             className="button button-small"
                             disabled={busy}
                           >
-                            Save update
+                            Save appointment update
                           </button>
                         </form>
-                      </details>
-                    )}
-                  </article>
-                ))}
-                {staff && (
-                  <details className="workspace-editor">
-                    <summary>Add an agreed application</summary>
-                    <form
-                      className="workspace-form"
-                      onSubmit={(e) => void submit(e, "application")}
-                    >
-                      {[
-                        ["institution", "Institution"],
-                        ["course", "Course"],
-                        ["destination", "Destination"],
-                        ["intake", "Intake"],
-                      ].map(([name, label]) => (
-                        <Field key={name} label={label}>
-                          <input
-                            name={name}
-                            required
-                            maxLength={
-                              name === "institution" || name === "course"
-                                ? 200
-                                : 100
-                            }
-                          />
-                        </Field>
-                      ))}
-                      <button className="button button-small" disabled={busy}>
-                        Add application
-                      </button>
-                    </form>
-                  </details>
-                )}
-              </section>
-            )}
-            {tab === "Documents" && (
-              <section className="workspace-section">
-                <h2>Your documents, kept private.</h2>
-                <p className="section-note">
-                  Only your account and authorised AECS staff can download these
-                  files. Upload documents requested by AECS. Do not upload
-                  passwords, payment card details or unrelated records.
-                </p>
-                {!staff && (
-                  <form
-                    className="document-upload"
-                    onSubmit={(e) => void upload(e)}
-                  >
-                    <Field label="Choose a document">
-                      <input
-                        name="file"
-                        type="file"
-                        accept="application/pdf,image/jpeg,image/png"
-                        required
-                      />
-                    </Field>
-                    <p>
-                      PDF, JPG or PNG · Up to 3 MB each · 30 documents per
-                      workspace
-                    </p>
-                    <button className="button button-small" disabled={busy}>
-                      Upload privately
-                    </button>
-                  </form>
-                )}
-                {!docs.length && (
-                  <Empty>
-                    No documents uploaded yet. Your checklist appears under
-                    Overview when AECS adds it.
-                  </Empty>
-                )}
-                {docs.map((d) => (
-                  <article className="document-record" key={d.id}>
-                    <div className="record-heading">
-                      <div>
-                        <h3>{d.name}</h3>
-                        <small>
-                          {Math.ceil(d.size_bytes / 1024)} KB ·{" "}
-                          {date(d.created_at)} NPT
-                        </small>
-                      </div>
-                      <a
-                        className="text-link"
-                        href={"/api/workspace/documents/" + d.id}
-                      >
-                        <Download size={17} />
-                        Download
-                      </a>
-                    </div>
-                    <p>
-                      <span className="status-label">{d.status}</span>
-                    </p>
-                    {d.feedback && (
-                      <p className="staff-feedback">
-                        AECS feedback: {d.feedback}
-                      </p>
-                    )}
-                    {staff && (
-                      <form
-                        className="workspace-form"
-                        onSubmit={(e) =>
-                          void submit(e, "document-review", { id: d.id })
-                        }
-                      >
-                        <Field label="Review status">
-                          <select
-                            name="status"
-                            defaultValue={
-                              d.status === "Changes requested"
-                                ? "Changes requested"
-                                : "Reviewed"
-                            }
-                          >
-                            <option>Reviewed</option>
-                            <option>Changes requested</option>
-                          </select>
-                        </Field>
-                        <Field label="Feedback for student">
-                          <textarea
-                            name="feedback"
-                            defaultValue={d.feedback}
-                            maxLength={1000}
-                          />
-                        </Field>
-                        <button
-                          className="button button-outline button-small"
-                          disabled={busy}
-                        >
-                          Save review
-                        </button>
-                      </form>
-                    )}
-                  </article>
-                ))}
-                <p className="section-note">
-                  “Reviewed” means an AECS staff review. It does not certify
-                  authenticity or institution acceptance. Files are not
-                  automatically virus-scanned.
-                </p>
-              </section>
-            )}
-            {tab === "Appointments" && (
-              <section className="workspace-section">
-                <h2>Make time for your next step.</h2>
-                <p className="section-note">
-                  Requests need AECS confirmation. Confirmed times are shown in
-                  Nepal time (NPT).
-                </p>
-                {!staff && (
-                  <form
-                    className="workspace-form"
-                    onSubmit={(e) => void submit(e, "appointment")}
-                  >
-                    <div className="form-row">
-                      <Field label="Preferred date">
-                        <input
-                          name="date"
-                          type="date"
-                          required
-                          min={new Date().toLocaleDateString("en-CA", {
-                            timeZone: "Asia/Kathmandu",
-                          })}
-                        />
-                      </Field>
-                      <Field label="How would you like to meet?">
-                        <select name="mode">
-                          <option>In person</option>
-                          <option>Online</option>
-                          <option>Phone</option>
-                        </select>
-                      </Field>
-                    </div>
-                    <Field label="What would you like to discuss? (optional)">
-                      <textarea name="note" maxLength={500} />
-                    </Field>
-                    <button className="button button-small" disabled={busy}>
-                      Request appointment
-                    </button>
-                  </form>
-                )}
-                {!meetings.length && (
-                  <Empty>No appointment requests yet.</Empty>
-                )}
-                {meetings.map((m) => (
-                  <article className="appointment-record" key={m.id}>
-                    <div className="record-heading">
-                      <h3>
-                        {day(m.requested_date)} · {m.meeting_mode}
-                      </h3>
-                      <span className="status-label">{m.status}</span>
-                    </div>
-                    {m.note && <p>{m.note}</p>}
-                    {m.starts_at && (
-                      <p>
-                        <strong>{date(m.starts_at)} NPT</strong>
-                      </p>
-                    )}
-                    {m.staff_note && <p>AECS: {m.staff_note}</p>}
-                    {staff && (
-                      <form
-                        className="workspace-form"
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          const f = new FormData(e.currentTarget);
-                          void mutate({
-                            action: "appointment-update",
-                            id: m.id,
-                            status: f.get("status"),
-                            startsAt: f.get("startsAt")
-                              ? new Date(
-                                  String(f.get("startsAt")) + "+05:45",
-                                ).toISOString()
-                              : "",
-                            note: f.get("note"),
-                          });
-                        }}
-                      >
-                        <div className="form-row">
-                          <Field label="Status">
-                            <select
-                              name="status"
-                              defaultValue={
-                                m.status === "Requested"
-                                  ? "Confirmed"
-                                  : m.status
-                              }
-                            >
-                              {[
-                                "Confirmed",
-                                "Reschedule requested",
-                                "Cancelled",
-                                "Completed",
-                              ].map((s) => (
-                                <option key={s}>{s}</option>
-                              ))}
-                            </select>
-                          </Field>
-                          <Field label="Meeting time (Nepal)">
-                            <input
-                              name="startsAt"
-                              type="datetime-local"
-                              defaultValue={
-                                m.starts_at
-                                  ? new Date(
-                                      new Date(m.starts_at).getTime() +
-                                        20700000,
-                                    )
-                                      .toISOString()
-                                      .slice(0, 16)
-                                  : ""
-                              }
-                            />
-                          </Field>
-                        </div>
-                        <Field label="Confirmation or rescheduling details">
-                          <textarea
-                            name="note"
-                            maxLength={1000}
-                            defaultValue={m.staff_note}
-                          />
-                        </Field>
-                        <button className="button button-small" disabled={busy}>
-                          Save appointment update
-                        </button>
-                      </form>
-                    )}
-                  </article>
-                ))}
-              </section>
-            )}
-            {tab === "Messages" && (
-              <section className="workspace-section">
-                <h2>A conversation with AECS.</h2>
-                <p className="section-note">
-                  Messages are saved here. Use Refresh to check for replies. For
-                  urgent help, call{" "}
-                  <a href="tel:+9779704518337" className="text-link">
-                    +977 970-451-8337
-                  </a>
-                  .
-                </p>
-                <div className="message-thread">
-                  {!data.messages.length && (
-                    <Empty>
-                      No messages yet. Start with your study goals or a question
-                      for the team.
-                    </Empty>
-                  )}
-                  {data.messages.map((m) => (
-                    <article
-                      key={m.id}
-                      className={
-                        "workspace-message " +
-                        (m.sender_role === "staff"
-                          ? "from-staff"
-                          : "from-student")
-                      }
-                    >
-                      <strong>
-                        {m.sender_role === "staff" ? "AECS team" : "Student"}
-                      </strong>
-                      <p>{m.body}</p>
-                      <small>{date(m.created_at)} NPT</small>
+                      )}
                     </article>
                   ))}
-                </div>
-                <form
-                  className="workspace-form"
-                  onSubmit={(e) => void submit(e, "message")}
-                >
-                  <Field
-                    label={staff ? "Reply to student" : "Your message to AECS"}
+                </section>
+              )}
+              {tab === "Messages" && (
+                <section className="workspace-section">
+                  <h2>A conversation with AECS.</h2>
+                  <p className="section-note">
+                    Messages are saved here. Use Refresh to check for replies.
+                    For urgent help, call{" "}
+                    <a href="tel:+9779704518337" className="text-link">
+                      +977 970-451-8337
+                    </a>
+                    .
+                  </p>
+                  <div className="message-thread">
+                    {!data.messages.length && (
+                      <Empty>
+                        No messages yet. Start with your study goals or a
+                        question for the team.
+                      </Empty>
+                    )}
+                    {data.messages.map((m) => (
+                      <article
+                        key={m.id}
+                        className={
+                          "workspace-message " +
+                          (m.sender_role === "staff"
+                            ? "from-staff"
+                            : "from-student")
+                        }
+                      >
+                        <strong>
+                          {m.sender_role === "staff" ? "AECS team" : "Student"}
+                        </strong>
+                        <p>{m.body}</p>
+                        <small>{date(m.created_at)} NPT</small>
+                      </article>
+                    ))}
+                  </div>
+                  <form
+                    className="workspace-form"
+                    onSubmit={(e) => void submit(e, "message")}
                   >
-                    <textarea name="body" required maxLength={2000} rows={4} />
-                  </Field>
-                  <button className="button button-small" disabled={busy}>
-                    Send message
-                  </button>
-                </form>
-                <p className="section-note">
-                  Showing the latest 100 messages. Messages appear in the
-                  workspace; email notifications are not enabled.
-                </p>
-              </section>
-            )}
-            {tab === "Profile" && (
-              <section className="workspace-section">
-                <h2>Your details</h2>
-                <form
-                  className="workspace-form"
-                  onSubmit={(e) => void submit(e, "profile")}
-                >
-                  <Field label="Full name">
-                    <input
-                      name="name"
-                      required
-                      maxLength={100}
-                      defaultValue={data.user.name}
-                    />
-                  </Field>
-                  <Field label="Phone (optional)">
-                    <input
-                      name="phone"
-                      type="tel"
-                      maxLength={40}
-                      defaultValue={data.user.phone || ""}
-                    />
-                  </Field>
-                  <Field label="Verified email">
-                    <input type="email" value={data.user.email} readOnly />
-                  </Field>
-                  <button className="button button-small" disabled={busy}>
-                    Save details
-                  </button>
-                </form>
-                <p className="section-note">
-                  For account corrections or a data deletion request, contact{" "}
-                  <a href="mailto:info@aecsnepal.com" className="text-link">
-                    info@aecsnepal.com
-                  </a>
-                  .
-                </p>
-              </section>
-            )}
+                    <Field
+                      label={
+                        staff ? "Reply to student" : "Your message to AECS"
+                      }
+                    >
+                      <textarea
+                        name="body"
+                        required
+                        maxLength={2000}
+                        rows={4}
+                      />
+                    </Field>
+                    <button className="button button-small" disabled={busy}>
+                      Send message
+                    </button>
+                  </form>
+                  <p className="section-note">
+                    Showing the latest 100 messages. Messages appear in the
+                    workspace; email notifications are not enabled.
+                  </p>
+                </section>
+              )}
+              {tab === "Profile" && (
+                <section className="workspace-section">
+                  <h2>Your details</h2>
+                  <form
+                    className="workspace-form"
+                    onSubmit={(e) => void submit(e, "profile")}
+                  >
+                    <Field label="Full name">
+                      <input
+                        name="name"
+                        required
+                        maxLength={100}
+                        defaultValue={data.user.name}
+                      />
+                    </Field>
+                    <Field label="Phone (optional)">
+                      <input
+                        name="phone"
+                        type="tel"
+                        maxLength={40}
+                        defaultValue={data.user.phone || ""}
+                      />
+                    </Field>
+                    <Field label="Verified email">
+                      <input type="email" value={data.user.email} readOnly />
+                    </Field>
+                    <button className="button button-small" disabled={busy}>
+                      Save details
+                    </button>
+                  </form>
+                  <p className="section-note">
+                    For account corrections or a data deletion request, contact{" "}
+                    <a href="mailto:info@aecsnepal.com" className="text-link">
+                      info@aecsnepal.com
+                    </a>
+                    .
+                  </p>
+                </section>
+              )}
+            </div>
           </div>
         </>
       )}

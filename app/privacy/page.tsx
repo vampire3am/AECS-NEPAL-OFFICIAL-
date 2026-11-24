@@ -35,11 +35,12 @@ export default function Privacy() {
         <h2>Your device and external services</h2>
         <p>
           Destination shortlists and saved study plans use your browser’s local
-          storage. They stay on that device until you clear them. A plan is
-          shared with AECS only when you submit its details in a booking
-          request. WhatsApp, map and social links open their respective
-          services, which have their own privacy practices. No advertising
-          trackers or automatically loaded social embeds are included.
+          storage. They stay on that device until you clear them. A browser plan
+          is shared with AECS when you import and save it in My AECS or submit
+          its details in a booking request. WhatsApp, map and social links open
+          their respective services, which have their own privacy practices. No
+          advertising trackers or automatically loaded social embeds are
+          included.
         </p>
         <h2>My AECS accounts and workspaces</h2>
         <p>

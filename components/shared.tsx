@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail, Check } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Check,
+  ArrowUpRight,
+  ArrowLeft,
+} from "lucide-react";
 import { business } from "@/lib/content";
 export function Footer() {
   return (
@@ -22,6 +29,11 @@ export function Footer() {
             <Link href="/pricing">Fees & packages</Link>
             <Link href="/plan">My study plan</Link>
             <Link href="/guides">Student guides</Link>
+            <Link href="/about">Meet AECS</Link>
+            <Link href="/my-aecs">My AECS workspace</Link>
+            <Link href="/nepali" lang="ne">
+              नेपालीमा जानकारी
+            </Link>
           </div>
           <div>
             <h2>Visit or get in touch</h2>
@@ -68,7 +80,7 @@ export function Invitation() {
           </p>
         </div>
         <Link href="/book" className="button button-light">
-          Book a conversation
+          Book a free session <ArrowUpRight size={19} />
         </Link>
       </div>
     </section>
@@ -84,7 +96,7 @@ export function PageIntro({
   return (
     <div className="page-intro shell">
       <Link href="/" className="breadcrumb">
-        Home
+        <ArrowLeft size={15} /> Back to home
       </Link>
       <h1>{title}</h1>
       <div className="lede">{children}</div>
@@ -99,4 +111,3 @@ export function CheckItem({ children }: { children: React.ReactNode }) {
     </li>
   );
 }
-

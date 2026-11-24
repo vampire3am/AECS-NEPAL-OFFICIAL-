@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/shared";
 import "./globals.css";
+import "./redesign.css";
 const site = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(site),
@@ -40,4 +41,3 @@ export default function RootLayout({
     </html>
   );
 }
-

@@ -8,7 +8,7 @@ Hosting owner: iamsamshad7@gmail.com.
 
 ## Public website
 
-Twelve destination guides, search, filters and side-by-side comparisons with dated primary sources for costs and intake guidance. IELTS, PTE and Duolingo preparation, dated AECS package pricing, real team profiles, guides, a printable budgeting worksheet and essential Nepali guidance for students and parents. The homepage uses AECS’s own Pearson event photograph rather than a generic destination illustration. Figures retain their source currency, period and scope; they are not quotations or immigration assessments.
+Twelve destination guides, search, filters and side-by-side comparisons with dated primary sources for costs and intake guidance. IELTS, PTE and Duolingo preparation, dated AECS package pricing, real team profiles, guides, a printable budgeting worksheet and essential Nepali guidance for students and parents. The redesigned homepage uses interactive destination previews, a working plan starter and a My AECS walkthrough. AECS team portraits and the award photograph support the About page. Figures retain their source currency, period and scope; they are not quotations or immigration assessments.
 
 ## Student workspace
 
@@ -35,3 +35,7 @@ See BUILD-VERIFICATION.md for checks and their limits. CI runs tests, TypeScript
 ## Operational boundaries
 
 Payments, automatic immigration eligibility decisions, university-system integrations and automatic message email notifications are not included. Application stages are staff records, not automatic institution status. Messages are read in the workspace using Refresh. No fake university decisions, testimonials, success percentages or invented prices are displayed. AECS must confirm copy, fees, continued image permissions and operational email configuration before broad rollout.
+
+## Frontend design tooling
+
+Impeccable is installed project-scope in .agents/skills/impeccable, with Codex hooks in .codex/hooks.json. On this Windows environment npx was unavailable, so the same installer ran via pnpm dlx impeccable install --project --providers=codex --yes. Project context, craft guidance, source detection, rendered detection and desktop/mobile screenshots were used for the redesign. The design system is documented in DESIGN.md; app/redesign.css applies it across public and private screens.
