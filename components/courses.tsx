@@ -77,6 +77,7 @@ export function Courses({ initialTest }: { initialTest?: string }) {
         ))}
       </div>
       <div
+        key={c.name}
         className="course-detail"
         id="course-panel"
         role="tabpanel"
@@ -111,4 +112,3 @@ export function Courses({ initialTest }: { initialTest?: string }) {
     </>
   );
 }
-

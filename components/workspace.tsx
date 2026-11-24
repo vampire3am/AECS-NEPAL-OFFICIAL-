@@ -423,7 +423,7 @@ export function Workspace({ staff = false }: { staff?: boolean }) {
                 </button>
               ))}
             </nav>
-            <div className="workspace-content" aria-busy={busy}>
+            <div key={tab} className="workspace-content" aria-busy={busy}>
               {tab === "Overview" && (
                 <>
                   <section className="workspace-welcome">

@@ -152,7 +152,7 @@ export function DestinationExplorer() {
                 id="route-preview"
                 aria-label={d.name + " study overview"}
               >
-                <div className="route-preview-image">
+                <div key={d.slug} className="route-preview-image">
                   <Image
                     src={d.image}
                     alt={d.name + " destination view"}

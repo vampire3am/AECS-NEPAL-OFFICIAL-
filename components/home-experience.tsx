@@ -64,7 +64,7 @@ export function StudyHero() {
             <div className="destination-nameplate">
               <div>
                 <span>Imagine studying in</span>
-                <strong>{destination.name}</strong>
+                <strong key={active}>{destination.name}</strong>
               </div>
               <Link
                 href={"/destinations/" + active}

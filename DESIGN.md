@@ -10,7 +10,7 @@ Self-hosted Manrope, 400–800. Opening display up to 6rem, with clear line brea
 
 ## Colour and composition
 
-Deep navy #112e43; ink #112b40; paper #f0f4f6; orange #f39747; dark orange text #9a430e; white #fcfdfd. Theme uses high-contrast navy regions, destination photography, asymmetrical image composition, open editorial rows and fine dividers. Rounded surfaces are restrained. No decorative gradient text, invented statistics or fake application dashboards.
+Logo-derived royal blue #4460b2, accessible blue field #3d51a6, deep blue #304596; ink #202d60; paper #f0f3ff; vivid logo orange #f46c19; dark orange text #a33d08; white #fcfdfd. Theme uses high-contrast navy regions, destination photography, asymmetrical image composition, open editorial rows and fine dividers. Rounded surfaces are restrained. No decorative gradient text, invented statistics or fake application dashboards.
 
 ## Public interactions
 
@@ -23,3 +23,9 @@ My AECS uses a left sidebar on desktop and scrollable section navigation on phon
 ## Motion and verification
 
 One purposeful destination-image reveal, plus restrained hover feedback. Reduced-motion removes the image reveal and decorative movement. Verify at desktop, intermediate and 390px mobile widths using the installed Impeccable tools and the browser. Deterministic detector findings are evidence to fix, not a design-quality score.
+
+## Logo alignment and motion
+
+The user requested the logo’s theme explicitly. Pixel sampling of the source logo gave a blue average RGB(68,96,178) and orange RGB(244,108,25). The shared system now uses those colours, with tonal variants for readable text and large surfaces. Teal fields and peach action colours were replaced.
+
+Motion thesis: the opening pairs the type arrival with the destination window (650–750ms), making the starting point and possible destination read together. Destination changes use a bounded image wipe and an active underline, with a short name transition. Tabs, course panels and workspace content acknowledge state changes in 240ms. Navigation uses a short ink fade and a mobile-menu reveal; the reading-progress line indicates position on long pages. Only the destination mosaic receives an on-entry image reveal, once. No looping motion or animation dependency. Reduced motion removes spatial/image reveals and keeps brief colour/opacity feedback. All content stays visible if animation support or scripts fail.

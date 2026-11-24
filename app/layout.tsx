@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SiteMotion } from "@/components/site-motion";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/shared";
 import "./globals.css";
@@ -35,6 +36,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <Header />
+        <SiteMotion />
         <main id="main">{children}</main>
         <Footer />
       </body>
