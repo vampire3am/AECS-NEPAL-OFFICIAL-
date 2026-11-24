@@ -20,3 +20,7 @@ Wide gutters, 1200px content measure; strong asymmetry in the opening and photo-
 
 Destination selection updates an accessible comparison tray. Forms have explicit pending, validation, saved and failed states. Navigation reflows to a complete mobile menu. Focus rings, reduced motion and semantic HTML are mandatory.
 
+
+## Workspace extension
+
+My AECS is Operate: quiet table-like records, horizontally scrollable section navigation on phones, real empty states, explicit ownership and next actions, and Nepal time for appointments. Public identity stays navy/orange with warm neutral planning surfaces. The opening uses the AECS team’s real Pearson event photograph, supported by named team profiles and practical service entry points.

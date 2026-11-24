@@ -9,6 +9,7 @@ const links = [
   ["English preparation", "/courses"],
   ["Pricing", "/pricing"],
   ["About AECS", "/about"],
+  ["नेपाली", "/nepali"],
 ];
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -53,6 +54,9 @@ export function Header() {
           ))}
         </nav>
         <div className="header-actions">
+          <Link className="portal-link" href="/my-aecs">
+            My AECS
+          </Link>
           <Link href="/book" className="button button-small">
             Let’s talk
           </Link>
@@ -91,4 +95,3 @@ export function Header() {
     </header>
   );
 }
-

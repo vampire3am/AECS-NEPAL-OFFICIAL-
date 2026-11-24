@@ -1,39 +1,37 @@
 # AECS Nepal
 
-A minimal, professional multi-page website for Abroad Education Consultancy Services Pvt. Ltd. Built with Next.js, React, TypeScript, Lakebase Postgres on Neon and managed Neon Auth. Intended Vercel hosting account: `iamsamshad7@gmail.com`.
+A multi-page study counselling website and private student platform built with Next.js 16, React, TypeScript, Neon Postgres, managed Neon Auth and private Neon object storage.
 
-## What works
+Live: https://aecs-nepal-official.vercel.app/
+Repository: https://github.com/vampire3am/AECS-NEPAL-OFFICIAL-
+Hosting owner: iamsamshad7@gmail.com.
 
-- Twelve destination guides, filters, search and side-by-side comparison of up to three destinations. Shortlists stay on the visitor's device.
-- IELTS, PTE and Duolingo course information, published package pricing, real AECS team profiles and preparation guides.
-- A study worksheet with local saving, printable summary and a calculator for the visitor's own cost estimates.
-- Counselling and exam enquiries saved server-side to Postgres, with stable references, idempotent retries, input validation, consent checks, origin checks, and database-backed rate limiting.
-- Owner-only staff inbox, verified email OTP sign-in, status filtering, pagination, status changes and audit records. The server authorizes every private read and mutation. The owner is selected through `ADMIN_EMAIL`; verified email alone grants no staff access.
-- Responsive navigation, local fonts and imagery, privacy/terms pages, sitemap, robots, error and not-found screens, basic browser security headers.
+## Public website
 
-## Local setup
+Twelve destination guides, search, filters and side-by-side comparisons with dated primary sources for costs and intake guidance. IELTS, PTE and Duolingo preparation, dated AECS package pricing, real team profiles, guides, a printable budgeting worksheet and essential Nepali guidance for students and parents. The homepage uses AECS’s own Pearson event photograph rather than a generic destination illustration. Figures retain their source currency, period and scope; they are not quotations or immigration assessments.
 
-Use Node 22.18 or newer. Install the pinned packages with `pnpm install --frozen-lockfile`. Copy `.env.example` to `.env.local` and supply the server-only database URL, managed Auth URL, independent random cookie and rate-limit secrets, owner email and site origin. Never commit `.env.local`.
+## Student workspace
 
-Run `pnpm dev`, `pnpm test`, `pnpm typecheck`, and `pnpm build`. `pnpm start` serves the production build. Run `node tests/integration.mjs` only against a development database: it writes synthetic test enquiries and intentionally exercises the rate limiter.
+At /my-aecs, students sign in using an email code, save a profile, import a browser draft, keep a study plan and shortlist, follow staff-entered applications and their history, complete their assigned tasks, upload requested documents privately, read review feedback, request appointments and exchange messages with AECS. Updates are real database records. Meetings are requests until staff confirms them. Dates and confirmed times use Nepal time.
 
-## Database and authentication
+## Owner control centre
 
-Neon project: `autumn-sky-98311213` (`AECS Nepal`), Singapore. Production branch: `br-royal-glade-bimex2my`. Development branch: `br-frosty-hall-bicvtuth`. Database: `aecs`.
+/staff contains the enquiry inbox. /staff/students contains student dossiers, application creation/stage updates, task and document checklists, private file downloads/reviews, appointment confirmation and replies. Only the verified configured ADMIN_EMAIL is staff. Students cannot grant themselves staff access or alter application stages. Every private endpoint derives identity from the server session; record ownership is checked in SQL. Sensitive responses use private, no-store caching.
 
-The initial schema is in `database/001_initial.sql`. All application tables enable RLS and revoke PUBLIC access. No public Data API is enabled; database access is server-side. Keep production and preview credentials separate. Test migrations on a branch before applying them to an established production database.
+## Setup
 
-Managed Neon Auth is provisioned. The application supports email OTP through the managed service. Add the deployed origin to Neon's trusted-domain allowlist. OTP delivery, sign-in, reload restoration and owner inbox interaction must be tested by the owner; automated tests do not send real email. Shared managed SMTP is suitable for initial verification; configure production SMTP in Neon before a wider operational rollout.
+Node >=22.18 and pnpm 11.25.0. Run pnpm install --frozen-lockfile, copy .env.example to .env.local and configure branch-specific values. Secrets must stay server-side and out of Git. Run pnpm dev, pnpm test, pnpm typecheck and pnpm build. pnpm start serves the production build.
 
-## Vercel deployment
+Database project autumn-sky-98311213, Singapore. Production br-royal-glade-bimex2my; development br-frosty-hall-bicvtuth; database aecs. Apply database/001_initial.sql then db/002-workspace.sql on a development branch before production. The private student-documents bucket and S3 credentials must match the database branch. Production and development use separate Auth endpoints, storage credentials and database URLs. All application tables have RLS enabled and PUBLIC permissions revoked. Access uses server-only database credentials; there is no public database API.
 
-Import `vampire3am/AECS-NEPAL-OFFICIAL-` into the intended Vercel account with Next.js auto-detection and Node 22 or newer. Configure all `.env.example` keys as environment variables. Use the production branch database for production and the isolated development branch for previews. Mark database and signing secrets as secret/sensitive variables. Set `NEXT_PUBLIC_SITE_URL` to the final canonical deployment origin and add that same origin to Neon Auth. Deploy, test public pages and the API, then have the owner verify sign-in. No existing domain should be moved without a separate request.
+The private document endpoint accepts PDF/JPEG/PNG signatures matching the declared MIME type, up to 3 MB each and 30 documents per student. Files are downloaded as attachments after authorisation. Document authenticity and malware are not automatically assessed. Audit records cover workspace changes and downloads. Staff must establish their retention policy and process correction/deletion requests, including both database records and stored objects.
 
-## Content and assets
+## Verification
 
-Business facts, team details, prices and existing images are sourced from `https://aecsnepal.com/`, retrieved 23 November 2026. `CONTENT-SOURCES.md` documents provenance. Published fees are dated and require confirmation before payment. No admission, visa, scholarship or score guarantee is made. The hero destination illustration is an existing AECS-published asset, not evidence of an individual student's result. Obtain and retain permission for continued use of all team and student images.
+Unit tests cover request consent, validation, idempotency input, origins, budget limits and document signatures. tests/workspace-integration.mjs performs the real student/staff HTTP → Auth → database → private storage workflow against the specifically guarded development branch. Run it only with AECS_RUN_INTEGRATION=1 and development ADMIN_EMAIL=aecs-staff-test@example.invalid. It creates synthetic records, retains fixtures locally under ignored .test-local and never sends real email. The development-only browser QA sign-in screen is not part of the deployed source.
+
+See BUILD-VERIFICATION.md for checks and their limits. CI runs tests, TypeScript and a production build. The owner must personally check live email-code delivery and sign-in; automated tests prove provider sessions with isolated password-based fixture identities, not real inbox delivery.
 
 ## Operational boundaries
 
-This release provides the public website, planning tools, enquiry backend and owner inbox. It does not collect payment, confirm exam availability, upload sensitive documents, manage university applications, or send automated counselling emails. Staff must follow up on enquiries and establish an appropriate retention/deletion policy. Authentication and email-provider settings require operational review before handling sensitive student records.
-
+Payments, automatic immigration eligibility decisions, university-system integrations and automatic message email notifications are not included. Application stages are staff records, not automatic institution status. Messages are read in the workspace using Refresh. No fake university decisions, testimonials, success percentages or invented prices are displayed. AECS must confirm copy, fees, continued image permissions and operational email configuration before broad rollout.

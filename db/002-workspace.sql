@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS student_profiles (user_id text PRIMARY KEY,email text NOT NULL,name text NOT NULL DEFAULT '',phone text NOT NULL DEFAULT '',created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS study_plans (user_id text PRIMARY KEY REFERENCES student_profiles(user_id),level text NOT NULL DEFAULT '',interest text NOT NULL DEFAULT '',destination text NOT NULL DEFAULT '',timing text NOT NULL DEFAULT '',tuition numeric NOT NULL DEFAULT 0 CHECK(tuition>=0),living numeric NOT NULL DEFAULT 0 CHECK(living>=0),other numeric NOT NULL DEFAULT 0 CHECK(other>=0),shortlist jsonb NOT NULL DEFAULT '[]',updated_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS applications (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id text NOT NULL REFERENCES student_profiles(user_id),institution text NOT NULL,course text NOT NULL,destination text NOT NULL,intake text NOT NULL,stage text NOT NULL DEFAULT 'Planning' CHECK(stage IN ('Planning','Preparing documents','Submitted','Offer received','Visa preparation','Completed','On hold')),next_action text NOT NULL DEFAULT '',waiting_on text NOT NULL DEFAULT 'AECS' CHECK(waiting_on IN ('Student','AECS','Institution')),created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS workspace_tasks (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id text NOT NULL REFERENCES student_profiles(user_id),title text NOT NULL,owner text NOT NULL CHECK(owner IN ('Student','AECS','Institution')),due_date date,completed boolean NOT NULL DEFAULT false,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS student_documents (id uuid PRIMARY KEY,user_id text NOT NULL REFERENCES student_profiles(user_id),name text NOT NULL,object_key text NOT NULL UNIQUE,content_type text NOT NULL,size_bytes integer NOT NULL CHECK(size_bytes>0 AND size_bytes<=3145728),status text NOT NULL DEFAULT 'uploading' CHECK(status IN ('uploading','Uploaded','Reviewed','Changes requested','failed')),feedback text NOT NULL DEFAULT '',created_at timestamptz NOT NULL DEFAULT now(),reviewed_at timestamptz);
+CREATE TABLE IF NOT EXISTS workspace_messages (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id text NOT NULL REFERENCES student_profiles(user_id),sender_id text NOT NULL,sender_role text NOT NULL CHECK(sender_role IN ('student','staff')),body text NOT NULL,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS appointments (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id text NOT NULL REFERENCES student_profiles(user_id),requested_date date NOT NULL,meeting_mode text NOT NULL CHECK(meeting_mode IN ('In person','Online','Phone')),note text NOT NULL DEFAULT '',status text NOT NULL DEFAULT 'Requested' CHECK(status IN ('Requested','Confirmed','Reschedule requested','Cancelled','Completed')),starts_at timestamptz,staff_note text NOT NULL DEFAULT '',created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS workspace_audit (id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,actor_id text NOT NULL,student_id text NOT NULL,action text NOT NULL,target_id text,created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS applications_student ON applications(user_id,created_at DESC);
+CREATE INDEX IF NOT EXISTS tasks_student ON workspace_tasks(user_id,created_at DESC);
+CREATE INDEX IF NOT EXISTS documents_student ON student_documents(user_id,created_at DESC);
+CREATE INDEX IF NOT EXISTS messages_student ON workspace_messages(user_id,created_at DESC);
+CREATE INDEX IF NOT EXISTS appointments_student ON appointments(user_id,created_at DESC);
+ALTER TABLE student_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE study_plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE applications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workspace_tasks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE student_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workspace_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE appointments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workspace_audit ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON student_profiles,study_plans,applications,workspace_tasks,student_documents,workspace_messages,appointments,workspace_audit FROM PUBLIC;
+
+ALTER TABLE student_profiles ADD COLUMN IF NOT EXISTS document_count integer NOT NULL DEFAULT 0 CHECK(document_count>=0 AND document_count<=30);
+CREATE TABLE IF NOT EXISTS application_events (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),application_id uuid NOT NULL REFERENCES applications(id),user_id text NOT NULL REFERENCES student_profiles(user_id),stage text NOT NULL,next_action text NOT NULL DEFAULT '',waiting_on text NOT NULL,created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS application_events_student ON application_events(user_id,created_at DESC);
+ALTER TABLE application_events ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON application_events FROM PUBLIC;

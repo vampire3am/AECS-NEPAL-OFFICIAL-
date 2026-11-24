@@ -19,3 +19,9 @@ Planning guides are newly written general preparation copy. They do not reproduc
 
 The frontend intentionally excludes unsupported outcome counts and success percentages. Sources are review evidence, not a claim of independent accreditation verification.
 
+
+## Destination comparison update — 24 November 2026
+
+Source links and field-level scope are maintained in lib/destination-facts.ts and displayed on comparison and detail pages. Sources include British Council Study UK, Study Australia/Austrade, EduCanada and Statistics Canada, DAAD, Education New Zealand, Study in Finland, JASSO Study in Japan, the Korean government’s Study in Korea portal, and European Commission country profiles. Amounts retain original currencies and periods; source age is visible when provided. Country-wide estimates are not invented where an institution-specific quote is needed.
+
+Essential Nepali student and parent guidance is newly written from the same business facts and platform behaviour. It is guidance, not a translation of immigration rules. The homepage now uses the real AECS award-event photograph already listed above; the old London illustration is retained as an unused source asset.

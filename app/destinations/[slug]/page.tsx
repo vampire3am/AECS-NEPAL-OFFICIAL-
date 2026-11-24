@@ -1,3 +1,4 @@
+import { destinationFacts, factsReviewed } from "@/lib/destination-facts";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -57,6 +58,35 @@ export default async function Destination({
             />
           </div>
         </div>
+        <section className="destination-facts">
+          <h2>The practical starting points.</h2>
+          <dl>
+            {(
+              [
+                ["tuition", "Tuition and scope"],
+                ["living", "Living costs"],
+                ["intakes", "Intakes and deadlines"],
+              ] as const
+            ).map(([key, label]) => (
+              <div key={key}>
+                <dt>{label}</dt>
+                <dd>{destinationFacts[d.slug][key]}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="section-note">
+            Sources checked {factsReviewed}. Amounts use the original currency
+            and period. Estimates are not a fee quote or a visa financial
+            assessment.
+          </p>
+          <div className="source-links">
+            {destinationFacts[d.slug].sources.map((source) => (
+              <a key={source.url} className="text-link" href={source.url}>
+                {source.label}
+              </a>
+            ))}
+          </div>
+        </section>
         <div className="two-column">
           <div>
             <h2>Start with the right questions.</h2>
@@ -105,4 +135,3 @@ export default async function Destination({
     </>
   );
 }
-

@@ -10,11 +10,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/book",
     "/plan",
+    "/nepali",
     "/guides",
     "/privacy",
     "/terms",
     ...destinations.map((d) => "/destinations/" + d.slug),
     ...guides.map((g) => "/guides/" + g.slug),
-  ].map((path) => ({ url: base + path, lastModified: "2026-11-23" }));
+  ].map((path) => ({ url: base + path, lastModified: "2026-11-24" }));
 }
-

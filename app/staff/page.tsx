@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getStaff, getAuth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { StaffInbox } from "@/components/staff-inbox";
@@ -25,8 +26,13 @@ export default async function Staff() {
   }
   return (
     <section className="shell content-section" style={{ paddingTop: 55 }}>
+      <nav className="desk-nav" aria-label="Staff desk">
+        <Link href="/staff" aria-current="page">
+          Enquiries
+        </Link>
+        <Link href="/staff/students">Student workspaces</Link>
+      </nav>
       <StaffInbox staffEmail={staff.email} />
     </section>
   );
 }
-

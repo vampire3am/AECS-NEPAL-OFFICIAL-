@@ -27,9 +27,10 @@ export default function Privacy() {
         <h2>Where information is processed</h2>
         <p>
           The website runs on Vercel. Request data is stored in a Neon Postgres
-          database in Singapore. Staff sign-in uses managed Neon Auth. These
-          services process technical information needed to provide the website
-          and authentication.
+          database in Singapore. Student and staff sign-in use managed Neon
+          Auth. Private documents are stored in a branch-scoped Neon object
+          storage bucket in Singapore. These services process technical
+          information needed to provide the website and authentication.
         </p>
         <h2>Your device and external services</h2>
         <p>
@@ -40,14 +41,27 @@ export default function Privacy() {
           services, which have their own privacy practices. No advertising
           trackers or automatically loaded social embeds are included.
         </p>
+        <h2>My AECS accounts and workspaces</h2>
+        <p>
+          When you sign in, we process your verified email and account details.
+          If you use My AECS, we save your profile, study plan, shortlist,
+          budget estimates, appointments, messages, document uploads and the
+          application or task updates entered by AECS. These records are
+          available to you and the authorised AECS owner. We record changes and
+          document downloads in an audit trail. Uploaded files are private and
+          are not published as public links. Messages are shown in your
+          workspace; automatic message email notifications are not enabled.
+        </p>
         <h2>Security and retention</h2>
         <p>
           We use server-side validation and access controls. Abuse prevention
           uses a keyed hash derived from connection information and a short time
           window. AECS should retain enquiries only while they are needed for
-          follow-up and applicable obligations. Do not submit passport numbers,
-          payment-card details, account passwords or financial documents through
-          this form.
+          follow-up and applicable obligations. Contact AECS to request deletion
+          of account records and stored documents. Upload only requested
+          documents inside your signed-in workspace. Do not submit passport
+          numbers, payment-card details, account passwords or financial
+          documents through this form.
         </p>
         <h2>Your choices</h2>
         <p>
@@ -60,4 +74,3 @@ export default function Privacy() {
     </>
   );
 }
-

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
+import { destinationFacts, factsReviewed } from "@/lib/destination-facts";
 import { destinations } from "@/lib/content";
 export function DestinationExplorer() {
   const [region, setRegion] = useState("All destinations"),
@@ -79,8 +80,9 @@ export function DestinationExplorer() {
         </div>
       </div>
       <p className="section-note" style={{ marginBottom: 25, marginTop: 0 }}>
-        Select up to three destinations to compare. Your shortlist stays on this
-        device.
+        Select up to three destinations to compare costs, start dates and
+        official sources. Your shortlist stays on this device. Sign in to My
+        AECS to import and save it to your account.
       </p>
       <p role="status" className="form-status error">
         {message}
@@ -188,12 +190,31 @@ export function DestinationExplorer() {
                     <td key={d.slug}>{d.language}</td>
                   ))}
                 </tr>
+                {(
+                  [
+                    ["tuition", "Tuition and scope"],
+                    ["living", "Living costs"],
+                    ["intakes", "Intakes and deadlines"],
+                  ] as const
+                ).map(([key, label]) => (
+                  <tr key={key}>
+                    <th scope="row">{label}</th>
+                    {compare.map((d) => (
+                      <td key={d.slug}>{destinationFacts[d.slug][key]}</td>
+                    ))}
+                  </tr>
+                ))}
                 <tr>
-                  <th scope="row">Costs and eligibility</th>
+                  <th scope="row">Official sources</th>
                   {compare.map((d) => (
                     <td key={d.slug}>
-                      Confirm against your course, institution and current
-                      requirements.
+                      {destinationFacts[d.slug].sources.map((source) => (
+                        <p key={source.url}>
+                          <a className="text-link" href={source.url}>
+                            {source.label}
+                          </a>
+                        </p>
+                      ))}
                     </td>
                   ))}
                 </tr>
@@ -214,12 +235,13 @@ export function DestinationExplorer() {
             </table>
           </div>
           <p className="section-note">
-            This comparison supports a counselling conversation. It does not
-            assess admission or visa eligibility.
+            Sources checked {factsReviewed}. Figures retain their original
+            currency and period; they are indicative, not an AECS quote. Add
+            travel, insurance and course-specific costs. This comparison does
+            not assess admission or visa eligibility.
           </p>
         </section>
       )}
     </>
   );
 }
-

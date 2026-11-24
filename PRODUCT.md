@@ -16,7 +16,7 @@ Nepali prospective students and their families exploring study destinations, Eng
 
 ## Product Purpose
 
-Help visitors understand their options, prepare an initial study plan and request a relevant counselling or exam session. Provide staff with a private lead workspace.
+Help visitors understand their options, prepare an initial study plan and request a relevant counselling or exam session. Provide students with a private planning, application, document, appointment and messaging workspace, and staff with an authorised control centre.
 
 ## Capabilities and Constraints
 

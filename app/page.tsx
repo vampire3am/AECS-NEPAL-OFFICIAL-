@@ -6,60 +6,67 @@ import { Invitation } from "@/components/shared";
 export default function Home() {
   return (
     <>
-      <section className="hero shell">
-        <div className="hero-copy">
+      <section className="aecs-opening shell">
+        <div className="opening-copy">
           <h1>
-            Your ambition.
-            <br />A world of
+            A world of options.
             <br />
-            <span>possibilities.</span>
+            <span>A plan that’s yours.</span>
           </h1>
           <p>
-            Find a study route that fits you. Honest counselling, focused
-            English preparation and a team in Kathmandu to help you take the
-            next step.
+            Study abroad starts with a clear conversation. Meet the AECS team in
+            Bagbazar, compare your options, and keep every next step in one
+            place.
           </p>
           <div className="hero-actions">
             <Link className="button" href="/plan">
-              Build my study plan
+              Find my starting point
             </Link>
             <Link className="text-link" href="/book">
               Meet a counsellor
             </Link>
           </div>
-          <div className="hero-footnote">
-            <span className="small-line" />
-            <span>
-              From Bagbazar.
+          <div className="opening-people">
+            <div className="people-avatars">
+              <Image src="/images/arun.webp" alt="" width={48} height={48} />
+              <Image src="/images/kamala.webp" alt="" width={48} height={48} />
+              <Image src="/images/sashita.webp" alt="" width={48} height={48} />
+            </div>
+            <p>
+              People you can meet.
               <br />
-              <strong>With your future in mind.</strong>
-            </span>
+              <strong>Guidance you can follow through.</strong>
+            </p>
           </div>
         </div>
-        <div className="hero-photo">
-          <Image
-            src="/images/student-london.webp"
-            alt="A student with a backpack looking across Westminster Bridge in London"
-            fill
-            priority
-            sizes="(max-width: 760px) 100vw, 52vw"
-          />
-          <div className="photo-caption">
-            <MapPin size={16} />
-            <span>London, United Kingdom</span>
+        <figure className="opening-photo">
+          <div className="opening-image">
+            <Image
+              src="/images/pearson-award.webp"
+              alt="AECS representatives at the Pearson Partners Meet 2026, holding an award and certificate"
+              fill
+              priority
+              sizes="(max-width:760px) 100vw, 44vw"
+            />
           </div>
-          <div className="photo-corner">
-            <span>
-              Your journey starts
-              <br />
-              with a conversation.
-            </span>
-            <Link href="/book" aria-label="Book a conversation with AECS">
-              <CalendarDays size={22} />
+          <figcaption>
+            <span>From the AECS team’s own story.</span>
+            <Link href="/about" className="text-link">
+              Get to know us
             </Link>
-          </div>
-        </div>
+          </figcaption>
+        </figure>
       </section>
+      <div className="opening-details shell">
+        <p>
+          <MapPin size={16} />
+          Bagbazar, Kathmandu
+        </p>
+        <p>Study counselling · English preparation · Exam booking</p>
+        <Link href="/nepali" lang="ne">
+          नेपालीमा जानकारी <span aria-hidden="true">→</span>
+        </Link>
+      </div>
       <section
         className="service-paths shell"
         aria-label="Choose your next step"
@@ -127,6 +134,51 @@ export default function Home() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+      <section className="workspace-introduction section shell">
+        <div>
+          <h2>
+            Your journey shouldn’t
+            <br />
+            get lost in a chat.
+          </h2>
+          <p>
+            My AECS keeps your shortlist, applications, documents and
+            conversations together. See what needs your attention, and what the
+            team is working on.
+          </p>
+          <Link href="/my-aecs" className="button">
+            Open My AECS
+          </Link>
+          <p className="section-note">
+            Your account. A private workspace with AECS.
+          </p>
+        </div>
+        <div className="journey-preview">
+          <h3>
+            From your first question
+            <br />
+            to your next decision.
+          </h3>
+          <ol>
+            <li>
+              <strong>A plan you can revisit</strong>
+              <span>Save your goals, shortlist and estimated budget.</span>
+            </li>
+            <li>
+              <strong>A clear next action</strong>
+              <span>Follow actual application updates from AECS.</span>
+            </li>
+            <li>
+              <strong>Documents in the right place</strong>
+              <span>Upload privately and read staff feedback.</span>
+            </li>
+            <li>
+              <strong>A conversation that stays together</strong>
+              <span>Request an appointment and message your team.</span>
+            </li>
+          </ol>
         </div>
       </section>
       <section className="preparation-section">
@@ -266,4 +318,3 @@ export default function Home() {
     </>
   );
 }
-

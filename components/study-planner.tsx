@@ -228,6 +228,12 @@ export function StudyPlanner() {
           <Printer size={17} />
           Print my plan
         </button>
+        <Link href="/my-aecs" className="text-link">
+          Save in My AECS account
+        </Link>
+        <p className="section-note">
+          Save on this device first, then import your draft inside My AECS.
+        </p>
         <p className="form-status" role="status">
           {status}
         </p>
@@ -235,4 +241,3 @@ export function StudyPlanner() {
     </div>
   );
 }
-

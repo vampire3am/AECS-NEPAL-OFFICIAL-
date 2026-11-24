@@ -1,21 +1,25 @@
 # Verification record
 
-23 November 2026.
+24 November 2026.
 
-- Production compilation, TypeScript and static generation passed with Next.js 16.4.6.
-- Five validation tests passed: explicit consent, contact validation, size limits, bot field, UUID request identity, origin matching and budget input handling.
-- Twenty-eight public routes returned HTTP 200 from the local production server, with no replacement characters. Unknown routes returned 404.
-- Security header checks passed. Pricing appears in the sitemap; staff pages are excluded.
-- Unauthenticated staff API access returned 403 without enquiry data.
-- Synthetic booking requests against the isolated Neon development branch returned persisted references. Repeated request IDs returned the same reference. Invalid consent, cross-origin requests and past dates were rejected. The sixth request in the test bucket returned 429.
-- Production application tables have RLS enabled. Database access remains server-side.
-- Impeccable source detector returned no findings for app/components. This is not a rendered accessibility assessment.
+## Verified
 
-## Still requiring live verification
+- Eight unit tests pass for booking validation, origins, budgets, privileged actions and document signatures.
+- Thirty-seven development integration checks pass through actual managed Auth sessions, HTTP routes, Postgres and private S3-compatible storage.
+- Two independent student identities prove plan, task, conversation and document isolation. Anonymous workspace/downloads fail; unauthorised record selection and application changes fail; staff review, appointment confirmation and replies persist.
+- Private document upload, byte-identical download, spoofed PDF rejection and unsigned public-bucket rejection pass. Workspace actions and document downloads produce audit records.
+- Staff application updates append actual history records. Calendar dates are returned as text so Nepal timezone conversion cannot shift a deadline.
+- Browser review at a 390 × 844 viewport covers the homepage, signed-in student overview, application view and private documents. Desktop review covers the public homepage and owner student desk. Synthetic development records only.
+- Production schema migration is additive; no prior enquiries were removed. Production has its own private bucket, storage credential and Auth endpoint. No synthetic student data was inserted into production.
 
-Browser control stopped during account setup because the active URL could not be verified. No desktop/mobile screenshot approval or full keyboard interaction test is claimed. The local preview is available at http://localhost:3000 while its server is running.
+## Delivery checks
 
-The owner must verify OTP delivery, sign-in, session restoration, sign-out and inbox status changes in the deployed environment. Automated checks did not send a real email. Configure production SMTP and confirm business copy, current pricing and image permissions before broader operational use.
+Production build, public route smoke checks and deployment state are recorded in the delivery status after deployment. No Lighthouse score or independent security certification is claimed.
 
-Vercel deployment must use iamsamshad7@gmail.com. The initially connected Vercel account was different; no resource was created in that account.
+## Operational verification still owned by AECS
 
+Confirm actual email-code delivery to the owner inbox and a student inbox, staff response procedures, current business prices and imagery rights. Managed Auth sessions work in development, but real SMTP inbox delivery was not exercised by the agent. Messages currently notify in the workspace only. Files are private but not automatically virus-scanned; staff review is not an authenticity certificate. Student records require a documented retention/deletion process.
+
+## Final local build checks
+
+Next.js production build and TypeScript passed. All 28 public page routes returned HTTP 200, anonymous private endpoints returned 401/403, unknown routes and the removed development QA route returned 404, and the student portal redirected anonymous visitors to sign-in. Static and optimised hero/logo image requests returned 200. No real email was sent.

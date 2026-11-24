@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { createAuthClient } from "@neon/auth/next";
 const authClient = createAuthClient();
-export function StaffSignIn() {
+export function StaffSignIn({ student = false }: { student?: boolean }) {
   const [email, setEmail] = useState(""),
     [otp, setOtp] = useState(""),
     [sent, setSent] = useState(false),
@@ -29,7 +30,7 @@ export function StaffSignIn() {
           throw new Error(
             result.error.message || "That code could not be verified.",
           );
-        window.location.assign("/staff");
+        window.location.assign(student ? "/my-aecs" : "/staff");
       }
     } catch (err) {
       setError(
@@ -43,15 +44,23 @@ export function StaffSignIn() {
   }
   return (
     <div className="auth-box">
-      <h1>AECS staff access.</h1>
+      <h1>
+        {student ? "Your next step, all together." : "AECS staff access."}
+      </h1>
       <p>
-        Use your authorised email address. A one-time code verifies that you
-        control the inbox. Public enquiries are never shown without staff
-        authorisation.
+        {student
+          ? "Sign in or create your My AECS account with your email. "
+          : "Use your authorised email address. "}{" "}
+        A one-time code verifies that you control the inbox.{" "}
+        {student
+          ? "Save your plan, share documents privately and follow updates from AECS."
+          : "Public enquiries are never shown without staff authorisation."}
       </p>
       <form onSubmit={submit}>
         <div className="field">
-          <label htmlFor="staff-email">Staff email</label>
+          <label htmlFor="staff-email">
+            {student ? "Your email" : "Staff email"}
+          </label>
           <input
             id="staff-email"
             autoComplete="email"
@@ -106,10 +115,18 @@ export function StaffSignIn() {
         )}
       </form>
       <p className="section-note">
-        Access is restricted to the configured AECS owner account. A verified
-        email alone does not grant staff permissions.
+        {student
+          ? "Your workspace is shared with authorised AECS staff. By continuing, you agree to our "
+          : "Access is restricted to the configured AECS owner account. A verified email alone does not grant staff permissions. "}
+        <Link className="text-link" href="/terms">
+          Terms
+        </Link>
+        {" and "}
+        <Link className="text-link" href="/privacy">
+          Privacy notice
+        </Link>
+        .
       </p>
     </div>
   );
 }
-
